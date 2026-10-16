@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git show:*)",
+      "Bash(git branch:*)", "Bash(git checkout:*)", "Bash(git switch:*)", "Bash(git add:*)",
+      "Bash(git commit:*)", "Bash(git fetch:*)", "Bash(git pull:*)", "Bash(git stash:*)",
+      "Bash(gh pr view:*)", "Bash(gh pr list:*)", "Bash(gh pr checks:*)", "Bash(gh run view:*)", "Bash(gh run list:*)",
+      "Bash(ls:*)", "Bash(cat:*)", "Bash(head:*)", "Bash(tail:*)", "Bash(wc:*)", "Bash(find:*)",
+      "Bash(grep:*)", "Bash(rg:*)", "Bash(jq:*)", "Bash(tree:*)", "Bash(which:*)",
+      "Bash(npm run:*)", "Bash(npm test:*)", "Bash(npm ci)", "Bash(npm install)", "Bash(npx tsc:*)",
+      "Bash(pnpm:*)", "Bash(yarn test:*)", "Bash(node:*)",
+      "Bash(python3:*)", "Bash(pytest:*)", "Bash(ruff:*)", "Bash(uv run:*)",
+      "WebSearch", "WebFetch"
+    ],
+    "deny": [
+      "Read(./.env)", "Read(./.env.*)", "Read(./**/.env)", "Read(./**/.env.*)",
+      "Read(./**/*.pem)", "Read(./**/*.key)", "Read(~/.ssh/**)", "Read(~/.aws/**)",
+      "Bash(rm -rf /:*)", "Bash(rm -rf ~:*)", "Bash(sudo rm:*)",
+      "Bash(git push --force:*)", "Bash(git push -f:*)", "Bash(git reset --hard origin/main:*)",
+      "Bash(curl * | bash:*)", "Bash(curl * | sh:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)", "Bash(gh pr merge:*)", "Bash(npm publish:*)", "Bash(vercel --prod:*)",
+      "Bash(supabase db push:*)", "Bash(rm:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [ { "type": "command", "command": "$HOME/.claude/hooks/guard-bash.sh", "timeout": 60 } ] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [ { "type": "command", "command": "$HOME/.claude/hooks/format-file.sh", "timeout": 30 } ] }
+    ],
+    "Notification": [
+      { "hooks": [ { "type": "command", "command": "$HOME/.claude/hooks/notify.sh" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "$HOME/.claude/hooks/notify.sh done" } ] }
+    ]
+  },
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 60
+}
